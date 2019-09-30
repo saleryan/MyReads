@@ -15,7 +15,7 @@ export class Book extends Component {
                            <BookShelfChanger />
                           </div>
                           <div className="book-title">{book.title}</div>
-							{book.authors.map(author => <div className="book-authors">{author}</div>)}
+							{book.authors.map(author => <div className="book-authors" key={author}>{author}</div>)}
                         </div>
                       </li>
 );
