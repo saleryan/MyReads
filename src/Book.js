@@ -1,23 +1,29 @@
-import React ,  {Component} from 'react'
+import React, { Component } from 'react'
 // import * as BooksAPI from './BooksAPI'
 import './App.css'
-import {BookShelfChanger} from './BookShelfChanger.js';
+import { BookShelfChanger } from './BookShelfChanger.js';
 
 export class Book extends Component {
- render() {
-   const book = this.props.data;
-   return (  <li>
-                        <div className="book">
-                          <div className="book-top">
-                            <div className="book-cover" 
-                            style={{ width: 128, height: 193, 
-                                   backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
-                           <BookShelfChanger />
-                          </div>
-                          <div className="book-title">{book.title}</div>
-							{book.authors.map(author => <div className="book-authors" key={author}>{author}</div>)}
-                        </div>
-                      </li>
-);
- }
+
+  changeBookShelf = (shelf) => {
+    this.props.changeBookShelf(this.props.book, shelf);
+  }
+  render() {
+    const { book, shelves } = this.props;
+    return (<li>
+      <div className="book">
+        <div className="book-top">
+          <div className="book-cover"
+            style={{
+              width: 128, height: 193,
+              backgroundImage: `url(${book.imageLinks.smallThumbnail})`
+            }}></div>
+          <BookShelfChanger shelves={shelves} shelf={book.shelf} changeBookShelf={this.changeBookShelf} />
+        </div>
+        <div className="book-title">{book.title}</div>
+        {book.authors.map(author => <div className="book-authors" key={author}>{author}</div>)}
+      </div>
+    </li>
+    );
+  }
 }
