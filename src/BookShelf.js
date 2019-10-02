@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-// import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { Book } from './Book.js';
 
 export class BookShelf extends Component {
-
   changeBookShelf = (book, shelf) => {
     this.props.changeBookShelf(book, shelf);
   }
+
   render() {
     const { shelf, books, shelves } = this.props;
     return (<div className="bookshelf">

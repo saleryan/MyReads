@@ -1,36 +1,16 @@
 import React from 'react'
-import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { Link } from 'react-router-dom';
 import { BookShelf } from './BookShelf.js'
 
 export class BookList extends React.Component {
-  state = {
-    books: []
-  }
-
-  shelves = [{ id: "currentlyReading", name: "Currently Reading" },
-  { id: "wantToRead", name: "Want To Read" },
-  { id: "read", name: "Read" }];
-
   changeBookShelf = (book, shelf) => {
-    BooksAPI.update(book, shelf)
-      .then(data => this.getAll());
-  }
-
-  getAll = () => {
-    BooksAPI.getAll()
-      .then(data => {
-        this.setState({ books: data });
-      });
-  }
-  componentDidMount() {
-    this.getAll();
+   	this.props.changeBookShelf(book, shelf);
   }
 
   render() {
-    const books = this.state.books;
-
+    const books = this.props.books;
+    const shelves = this.props.shelves;
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -38,10 +18,10 @@ export class BookList extends React.Component {
         </div>
         <div className="list-books-content">
           <div>
-            {this.shelves.map(shelf => (
+            {shelves.map(shelf => (
               <BookShelf key={shelf.id}
                 shelf={shelf}
-                shelves={this.shelves}
+                shelves={shelves}
                 changeBookShelf={this.changeBookShelf}
                 books={books.filter(book => book.shelf === shelf.id)} />
             ))

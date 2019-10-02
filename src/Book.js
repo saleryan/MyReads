@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-// import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { BookShelfChanger } from './BookShelfChanger.js';
 
@@ -13,15 +12,15 @@ export class Book extends Component {
     return (<li>
       <div className="book">
         <div className="book-top">
-          <div className="book-cover"
+          {book.imageLinks && book.imageLinks.smallThumbnail && <div className="book-cover"
             style={{
               width: 128, height: 193,
               backgroundImage: `url(${book.imageLinks.smallThumbnail})`
-            }}></div>
+            }}></div>}
           <BookShelfChanger shelves={shelves} shelf={book.shelf} changeBookShelf={this.changeBookShelf} />
         </div>
         <div className="book-title">{book.title}</div>
-        {book.authors.map(author => <div className="book-authors" key={author}>{author}</div>)}
+        {book.authors && book.authors.map(author => <div className="book-authors" key={author}>{author}</div>)}
       </div>
     </li>
     );
