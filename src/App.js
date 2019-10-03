@@ -27,19 +27,23 @@ class BooksApp extends React.Component {
 
   shelves = [{
     id: "currentlyReading",
-    name: "Currently Reading"
+    name: "Currently Reading",
+    display: true
   },
   {
     id: "wantToRead",
-    name: "Want To Read"
+    name: "Want To Read",
+    display: true
   },
   {
     id: "read",
-    name: "Read"
+    name: "Read",
+    display: true
   },
   {
-    id: "none",
-    name: "None"
+    id: "",
+    name: "None",
+    display: false
   }];
 
   render() {

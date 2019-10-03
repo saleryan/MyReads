@@ -8,6 +8,7 @@ export class Search extends React.Component {
 
   state = {
     value: '',
+    prevValue: '',
     books: []
   }
 
@@ -15,47 +16,50 @@ export class Search extends React.Component {
     this.props.changeBookShelf(book, shelf)
   }
 
-
   componentDidUpdate() {
-
-    if ((this.state.value !== this.state.prevValue)) {
-      if (this.state.value) {
-        BooksAPI.search(this.state.value, 5)
+    const value = this.state.value;
+    const prevValue = this.state.prevValue;
+    if ((value !== prevValue)) {
+      if (value.length > 0) {
+        BooksAPI.search(value)
           .then(data => {
             if (data.error) {
               data = [];
             }
-            this.setState((prevState) =>
-              ({
-                value: prevState.value,
-                prevValue: prevState.value,
-                books: data || []
-              })
-            )
+            if (this.state.value) {
+              this.setState((prevState) =>
+                ({
+                  value: prevState.value,
+                  prevValue: prevState.value,
+                  books: data || []
+                })
+              )
+            }
 
           }
           );
-      } else {
-        this.setState((prevState) =>
-          ({
-            value: prevState.value,
-            prevValue: prevState.value,
-            books: []
-          })
-        )
       }
     }
   }
 
   onChange = (e) => {
-    this.setState({ value: e.target.value });
+    const value = e.target.value;
+    this.setState((prevState) =>
+      ({
+        value: value,
+        prevValue: prevState.value,
+        books: []
+      }))
   }
 
-
   render() {
-    const bookIds = this.props.books.map(book => book.id);
-    const booksWithNoShelf = this.state.books.filter(book => bookIds.indexOf(book.id) < 0);
-
+    const books = this.props.books;
+    const booksById = Object.assign({}, ...books.map(book => ({ [book.id]: book })));
+    const bookSearchWithShelf = this.state.books.map(book => ({
+      ...book,
+      shelf: (booksById[book.id] || {}).shelf || ''
+    })
+    );
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -77,10 +81,10 @@ export class Search extends React.Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {
-              booksWithNoShelf.length > 0 && booksWithNoShelf.map(book =>
-                <Book key={book.id} book={book} shelves={this.props.shelves} changeBookShelf={this.changeBookShelf} />
+              bookSearchWithShelf.length > 0 && bookSearchWithShelf.map(book =>
+                <Book key={book.id} book={book} shelf={book.shelf} shelves={this.props.shelves} changeBookShelf={this.changeBookShelf} />
               )}
-            {(booksWithNoShelf.length === 0 && this.state.value.length > 0) && (<div> no results found </div>)}
+            {(bookSearchWithShelf.length === 0 && this.state.value.length > 0) && (<div> no results found </div>)}
           </ol>
         </div>
       </div>

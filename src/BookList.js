@@ -10,7 +10,7 @@ export class BookList extends React.Component {
 
   render() {
     const books = this.props.books;
-    const shelves = this.props.shelves;
+    const shelves = this.props.shelves.filter(shelf => shelf.display);
     return (
       <div className="list-books">
         <div className="list-books-title">
