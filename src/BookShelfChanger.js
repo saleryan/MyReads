@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-// import * as BooksAPI from './BooksAPI'
 import './App.css'
+import PropTypes from 'prop-types'
 
 export class BookShelfChanger extends Component {
   state = {
@@ -26,4 +26,9 @@ export class BookShelfChanger extends Component {
       </select>
     </div>);
   }
+}
+
+BookShelfChanger.propTypes = {
+  shelf: PropTypes.string.isRequired,
+  shelves: PropTypes.array.isRequired
 }

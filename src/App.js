@@ -4,6 +4,7 @@ import './App.css'
 import { Search } from './Search';
 import { BookList } from './BookList.js';
 import { Route, Switch } from 'react-router-dom';
+import { NoMatch } from './NoMatch';
 
 class BooksApp extends React.Component {
   state = {
@@ -56,6 +57,7 @@ class BooksApp extends React.Component {
           <Route path='/search'>
             <Search shelves={this.shelves} changeBookShelf={this.changeBookShelf} books={this.state.books} />
           </Route>
+          <Route component={NoMatch} />
 
         </Switch>
       </div>

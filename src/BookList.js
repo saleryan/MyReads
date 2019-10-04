@@ -2,10 +2,11 @@ import React from 'react'
 import './App.css'
 import { Link } from 'react-router-dom';
 import { BookShelf } from './BookShelf.js'
+import PropTypes from 'prop-types'
 
 export class BookList extends React.Component {
   changeBookShelf = (book, shelf) => {
-   	this.props.changeBookShelf(book, shelf);
+    this.props.changeBookShelf(book, shelf);
   }
 
   render() {
@@ -23,7 +24,7 @@ export class BookList extends React.Component {
                 shelf={shelf}
                 shelves={shelves}
                 changeBookShelf={this.changeBookShelf}
-                books={books.filter(book => book.shelf === shelf.id)} />
+                books={books.filter(book => book.shelf === shelf.id) || []} />
             ))
             }
 
@@ -35,4 +36,9 @@ export class BookList extends React.Component {
       </div>
     )
   }
+}
+
+BookList.propTypes = {
+  books: PropTypes.array.isRequired,
+  shelves: PropTypes.array.isRequired
 }

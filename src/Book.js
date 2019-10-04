@@ -1,28 +1,34 @@
-import React, { Component } from 'react'
+=import React from 'react'
 import './App.css'
 import { BookShelfChanger } from './BookShelfChanger.js';
+import PropTypes from 'prop-types'
 
-export class Book extends Component {
+export function Book(props) {
 
-  changeBookShelf = (shelf) => {
-    this.props.changeBookShelf(this.props.book, shelf);
+  const changeBookShelf = (shelf) => {
+    props.changeBookShelf(props.book, shelf);
   }
-  render() {
-    const { book, shelves } = this.props;
-    return (<li>
-      <div className="book">
-        <div className="book-top">
-          {book.imageLinks && book.imageLinks.smallThumbnail && <div className="book-cover"
-            style={{
-              width: 128, height: 193,
-              backgroundImage: `url(${book.imageLinks.smallThumbnail})`
-            }}></div>}
-          <BookShelfChanger shelves={shelves} shelf={book.shelf} changeBookShelf={this.changeBookShelf} />
-        </div>
-        <div className="book-title">{book.title}</div>
-        {book.authors && book.authors.map(author => <div className="book-authors" key={author}>{author}</div>)}
+
+  const { book, shelves } = props;
+  return (<li>
+    <div className="book">
+      <div className="book-top">
+        {book.imageLinks && book.imageLinks.smallThumbnail && <div className="book-cover"
+          style={{
+            width: 128, height: 193,
+            backgroundImage: `url(${book.imageLinks.smallThumbnail})`
+          }}></div>}
+        <BookShelfChanger shelves={shelves} shelf={book.shelf} changeBookShelf={changeBookShelf} />
       </div>
-    </li>
-    );
-  }
+      <div className="book-title">{book.title}</div>
+      {book.authors && book.authors.map(author => <div className="book-authors" key={author}>{author}</div>)}
+    </div>
+  </li>
+  );
+
+}
+
+Book.propTypes = {
+  book: PropTypes.object.isRequired,
+  shelves: PropTypes.array.isRequired
 }

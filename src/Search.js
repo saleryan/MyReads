@@ -3,12 +3,13 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { Link } from 'react-router-dom';
 import { Book } from './Book.js';
+import { Debounce } from 'react-throttle';
+import PropTypes from 'prop-types';
 
 export class Search extends React.Component {
 
   state = {
     value: '',
-    prevValue: '',
     books: []
   }
 
@@ -16,40 +17,30 @@ export class Search extends React.Component {
     this.props.changeBookShelf(book, shelf)
   }
 
-  componentDidUpdate() {
-    const value = this.state.value;
-    const prevValue = this.state.prevValue;
-    if ((value !== prevValue)) {
-      if (value.length > 0) {
-        BooksAPI.search(value)
-          .then(data => {
-            if (data.error) {
-              data = [];
-            }
-            if (this.state.value) {
-              this.setState((prevState) =>
-                ({
-                  value: prevState.value,
-                  prevValue: prevState.value,
-                  books: data || []
-                })
-              )
-            }
+  search(value) {
 
+    this.setState({
+      value: value,
+      books: []
+    });
+
+    if (value.length > 0) {
+      BooksAPI.search(value)
+        .then(data => {
+          if (data.error) {
+            data = [];
           }
-          );
-      }
+          if (this.state.value) {
+            this.setState((prevState) =>
+              ({
+                value: prevState.value,
+                books: data || []
+              })
+            )
+          }
+        }
+        );
     }
-  }
-
-  onChange = (e) => {
-    const value = e.target.value;
-    this.setState((prevState) =>
-      ({
-        value: value,
-        prevValue: prevState.value,
-        books: []
-      }))
   }
 
   render() {
@@ -74,8 +65,12 @@ export class Search extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-            <input type="text" placeholder="Search by title or author" onChange={this.onChange} value={this.state.value} />
+            <Debounce time="400" handler="onChange">
+              <input type="text"
+                onChange={(e) => this.search(e.target.value)}
 
+                placeholder="Search by title or author" />
+            </Debounce>
           </div>
         </div>
         <div className="search-books-results">
@@ -90,4 +85,8 @@ export class Search extends React.Component {
       </div>
     )
   }
+}
+
+Search.propTypes = {
+  books: PropTypes.array.isRequired
 }
