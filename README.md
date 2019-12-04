@@ -1,7 +1,6 @@
 # MyReads Project
 
-This is the complete project submission for the Udacity's React Fundamentals course.
-
+This is the complete project submission for the Udacity's React Fundamentals course. This app provides a way to keep track of the status of the books you are reading or have read or planning to read.
 
 ## Usage
 
