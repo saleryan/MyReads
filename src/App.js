@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import { Search } from './Search';
@@ -6,27 +6,24 @@ import { BookList } from './BookList.js';
 import { Route, Switch } from 'react-router-dom';
 import { NoMatch } from './NoMatch';
 
-class BooksApp extends React.Component {
-  state = {
-    books: []
+function BooksApp() {
+  const [books, setBooks] = useState([]);
+
+  const changeBookShelf = async(book, shelf) => {
+    await BooksAPI.update(book, shelf);
+    await getAll();
   }
 
-  changeBookShelf = (book, shelf) => {
-    BooksAPI.update(book, shelf)
-      .then(data => this.getAll());
+  const getAll = async () => {
+    const data = await BooksAPI.getAll();
+    setBooks(data);
   }
 
-  getAll = () => {
-    BooksAPI.getAll()
-      .then(data => {
-        this.setState({ books: data });
-      });
-  }
-  componentDidMount() {
-    this.getAll();
-  }
+  useEffect(() => {
+    getAll();
+  }, [])
 
-  shelves = [{
+  const shelves = [{
     id: "currentlyReading",
     name: "Currently Reading",
     display: true
@@ -46,23 +43,21 @@ class BooksApp extends React.Component {
     name: "None",
     display: false
   }];
+  return (
+    <div className="app">
+      <Switch>
+        <Route exact path='/'>
+          <BookList shelves={shelves} books={books} changeBookShelf={changeBookShelf} />
+        </Route>
+        <Route path='/search'>
+          <Search shelves={shelves} changeBookShelf={changeBookShelf} books={books} />
+        </Route>
+        <Route component={NoMatch} />
 
-  render() {
-    return (
-      <div className="app">
-        <Switch>
-          <Route exact path='/'>
-            <BookList shelves={this.shelves} books={this.state.books} changeBookShelf={this.changeBookShelf} />
-          </Route>
-          <Route path='/search'>
-            <Search shelves={this.shelves} changeBookShelf={this.changeBookShelf} books={this.state.books} />
-          </Route>
-          <Route component={NoMatch} />
+      </Switch>
+    </div>
+  )
 
-        </Switch>
-      </div>
-    )
-  }
 }
 
 export default BooksApp

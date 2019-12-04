@@ -1,31 +1,30 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import './App.css'
 import PropTypes from 'prop-types'
 
-export class BookShelfChanger extends Component {
-  state = {
-    value: this.props.shelf
+export function BookShelfChanger(props) {
+
+  const [ value, setValue ] = useState(props.shelf)
+  const onChange = (e) => {
+    setValue(e.target.value);
+    props.changeBookShelf(e.target.value);
   }
 
-  onChange = (e) => {
-    this.setState({ value: e.target.value });
-    this.props.changeBookShelf(e.target.value);
+  const isDisabled = (shelf) => {
+    return value === shelf;
   }
-  isDisabled = (shelf) => {
-    return this.state.value === shelf;
-  }
-  render() {
-    const { shelves } = this.props;
-    return (<div className="book-shelf-changer">
-      <select value={this.state.value} onChange={this.onChange}>
 
-        <option key="move" value="move" disabled>Move to...</option>
-        {shelves.map(shelf =>
-          <option key={shelf.id} value={shelf.id} disabled={this.isDisabled(shelf.id)} >{shelf.name}</option>
-        )}
-      </select>
-    </div>);
-  }
+  const { shelves } = props;
+  return (<div className="book-shelf-changer">
+    <select value={value} onChange={onChange}>
+
+      <option key="move" value="move" disabled>Move to...</option>
+      {shelves.map(shelf =>
+        <option key={shelf.id} value={shelf.id} disabled={isDisabled(shelf.id)} >{shelf.name}</option>
+      )}
+    </select>
+  </div>);
+
 }
 
 BookShelfChanger.propTypes = {

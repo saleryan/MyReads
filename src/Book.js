@@ -1,4 +1,4 @@
-=import React from 'react'
+import React from 'react'
 import './App.css'
 import { BookShelfChanger } from './BookShelfChanger.js';
 import PropTypes from 'prop-types'
